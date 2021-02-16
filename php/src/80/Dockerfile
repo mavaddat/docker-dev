@@ -38,10 +38,13 @@ RUN apt update && apt install -y --no-install-recommends \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
   && docker-php-ext-install -j$(nproc) gd
 
-# Install Composer
+# Install Composer (v1 and v2)
 RUN curl --silent --show-error https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer clear-cache
+  && cp /usr/local/bin/composer /usr/local/bin/composer1 \
+  && composer1 self-update --1
+  && composer1 clear-cache
 
 # Install MailHog
 RUN curl -L -o /usr/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
