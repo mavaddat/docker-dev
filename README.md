@@ -15,32 +15,32 @@
   <br />
 </div>
 
-__An everyday local development environment for PHP Developers.__ At [Pivotal Agency](https://pivotal.agency), we've done a _buuunnnch_ of R&D to find the best local dev tools for our team. This is the result of our hard work. This tool has been put to its paces everyday by our team, we hope it can also help yours.
+__An everyday local development environment for PHP Developers.__ Remix of <https://github.com/pvtl/docker-dev> by @pvtl aka [Pivotal Agency](https://pivotal.agency).
 
 ---
 
 ## Intro 👋
 
-This is a set of Docker images to spin up a LAMP stack (Linux, Apache, MySQL and PHP) for developing locally. It's perfect for local development because you can very simply add new sites to specified directory and they're magically accessible as a subdomain of your chosen hostname (eg. eg. `~/Sites/info` maps to `http://info.localhost/`).
+This is a set of Docker images to spin up a LAMP stack (Linux, Apache, MySQL and PHP) for developing locally. It's perfect for local development because you can very simply add new sites to specified directory and they're magically accessible as a subdomain of your chosen hostname (e.g., `~/sites/info` maps to `http://info.localhost/`).
 
 It includes all the required dependencies for everyday PHP development with common tools like Laravel, Wordpress and Magento (1 & 2). Specifically:
 
 *Default:*
 
 - Apache
-- PHP 8.0
-    - Composer (latest)
-    - Node.js (16.x) & NPM (latest)*
-    - Yarn (latest)*
-    - PHPCS (with Wordpress code standards added)*
-    - Wordpress CLI*
-    - ZSH*
+- PHP 7.4
+  - Composer (latest)
+  - Node.js (16.x) & NPM (latest)*
+  - Yarn (latest)*
+  - PHPCS (with Wordpress code standards added)*
+  - Wordpress CLI*
+  - [fish](https://github.com/fish-shell/fish-shell/) <img src="https://fishshell.com/assets/img/Terminal_Logo_LCD_Small.png" width="23px">
 - Mailhog (latest)
 - MariaDB 10.3
 
 *Optional:*
 
-- PHP 5.6, 7.0, 7.1, 7.2, 7.3 and 7.4
+- PHP 5.6, 7.0, 7.1, 7.2, 7.3 and 8.0
 - Memcached 1.x
 - Redis 6.x
 - HTTPS (SSL for localhost)
@@ -50,7 +50,7 @@ It includes all the required dependencies for everyday PHP development with comm
 
 The environment features clever *domain mapping* to allow you to run code for various platforms. Sites are accessible from the following URLs (by default it's `http://<website>.localhost`, however `APACHE_HOSTNAME` can modified in `.env` to point to a different hostname):
 
-* __http://classic-php.php56.{APACHE_HOSTNAME}__ (eg. http://classic-php.php56.localhost)
+* __http://classic-php.php56.{APACHE_HOSTNAME}__ (e.g., http://classic-php.php56.localhost)
     * Will map to `~/Sites/classic-php` and use PHP 5.6
 * __http://laravel.php74.pub.{APACHE_HOSTNAME}__
     * Will map to `~/Sites/laravel/public` and use PHP 7.4
@@ -72,12 +72,12 @@ You'll first need to install Docker Desktop (or Docker on Linux).
 
 ```bash
 # Clone the repo
-git clone https://github.com/pvtl/docker-dev && cd docker-dev
+git clone https://github.com/mavaddat/docker-dev && cd docker-dev
 
 # Create & update relevant config - For example:
 #  - Point sites to your sites directory
 #  - Set user/group ID's
-#  - Add optional services (eg. extra PHP versions, PHPMyAdmin, Memcached etc)
+#  - Add optional services (e.g., extra PHP versions, PHPMyAdmin, Memcached etc)
 cp .env.example .env
 
 # Start the environment
@@ -109,7 +109,7 @@ docker-compose up -d
 docker system prune --volumes
 ```
 
-*This will also install the latest versions of all tools (eg. PHP, Redis, Node.js etc.)*
+*This will also install the latest versions of all tools (e.g., PHP, Redis, Node.js etc.)*
 
 ---
 
@@ -123,7 +123,7 @@ The Docker Engine must be running and commands must be run within this repo's ro
 | `docker-compose stop`  | Stop all containers (keeps any config changes you've made to the containers) |
 | `docker-compose up -d --build --no-cache` | Recreate all containers from scratch |
 | `docker-compose down`  | Tear down all containers (MySQL data and Project files are kept) |
-| `docker-compose exec php80-fpm zsh`  | Open a zsh terminal in the PHP 8.0 container |
+| `docker-compose exec php80-fpm fish`  | Open a fish terminal in the PHP 8.0 container |
 | `docker-compose logs php80-fpm` | View all logs for PHP-FPM 8.0 |
 | `docker-compose ps` | Show which containers are running |
 

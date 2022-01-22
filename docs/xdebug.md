@@ -21,15 +21,14 @@ docker-compose restart php80-fpm
 
 When you have finished using XDebug, simply reverse the process to disable it again:
 
-```
+```sh
 docker-compose exec php80-fpm bash
 sudo mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.DISABLE
 docker-compose restart php80-fpm
 ```
 
-
 ## Connecting to your IDE
-XDebug expects the debugging client (eg. VS Code or PHPStorm) to be running on port `9000` of the host machine. Make sure you set your IDE to start listening for XDebug connections.
+XDebug expects the debugging client (e.g., VS Code or PHPStorm) to be running on port `9000` of the host machine. Make sure you set your IDE to start listening for XDebug connections.
 
 It also uses the special Docker hostname of `host.docker.internal` to locate the host machine's IP address. This feature is only available on recent versions of Docker Desktop for Windows and Mac. Linux is not currently supported. As a work-around you can exec into your PHP container, edit `/usr/local/etc/php/conf.d/zza-custom.ini` and put your host machine's IP there instead.
 

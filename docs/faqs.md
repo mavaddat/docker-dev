@@ -2,7 +2,7 @@
 
 ## <xyz>.localhost isn't working
 
-Most browser (eg. Brave, Microsoft Edge, Google Chrome etc) will automatically detect the .localhost TLD and route to localhost (so you won't need to do anything further). However if you're receiving an error, it could be because your browser isn't doing this (routing the host to localhost).
+Most browser (e.g., Brave, Microsoft Edge, Google Chrome etc) will automatically detect the .localhost TLD and route to localhost (so you won't need to do anything further). However if you're receiving an error, it could be because your browser isn't doing this (routing the host to localhost).
 
 You can manually tell your machine to route the URL to localhost (127.0.0.1) by editing your machine's host file. The below is an example for UNIX based systems.
 
@@ -10,7 +10,7 @@ You can manually tell your machine to route the URL to localhost (127.0.0.1) by 
 # Open your hosts files (with admin rights)
 sudo nano /etc/hosts
 
-# Append each site you need to access - eg.
+# Append each site you need to access - e.g.,
 127.0.0.1 info.localhost
 ```
 
@@ -20,7 +20,7 @@ sudo nano /etc/hosts
 
 Each version of PHP can have it's own CRON's.
 
-1. Simply create a file called `custom_crontab` in the PHP directory of your choice (eg. `/php/74/custom_crontab`). Add your CRON's to this script.
+1. Simply create a file called `custom_crontab` in the PHP directory of your choice (e.g., `/php/74/custom_crontab`). Add your CRON's to this script.
 1. Rebuild that PHP container: `docker compose build php74-fpm`
 1. And start it up: `docker compose up -d`
 
@@ -110,7 +110,7 @@ Let's say you want `phpinfo.com` to map to a local site. It's as easy as adding 
 ```
 DocumentRoot /var/www/html
 DirectoryIndex index.html index.php
-ServerAdmin tech@pvtl.io
+ServerAdmin support@mavaddat.ca
 
 <VirtualHost *:*>
     ServerName phpinfo.com
@@ -131,7 +131,7 @@ _Note that apache will load the conf files in alphabetical order. Because our lo
 
 ## Changing your MySQL Root password
 
-If data already exists in your MySQL data store (eg. you've started the MySQL container in the past), simply changing the `.env` `MYSQL_ROOT_PASSWORD` will not change the password. Instead, you need to follow the following steps:
+If data already exists in your MySQL data store (e.g., you've started the MySQL container in the past), simply changing the `.env` `MYSQL_ROOT_PASSWORD` will not change the password. Instead, you need to follow the following steps:
 
 - Update `MYSQL_ROOT_PASSWORD` in `.env`, to your new password
 - Build, start and exec into your MySQL container: `docker compose exec mysql bash`

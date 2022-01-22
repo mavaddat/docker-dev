@@ -1,11 +1,11 @@
 FROM php:7.0-fpm
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+LABEL maintainer.name="Mavaddat Javid" \
+      maintainer.email="support@mavaddat.ca"
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
-
-RUN apt update && apt install -y --no-install-recommends \
+RUN apt-add-repository ppa:fish-shell/release-3 && apt update && \
+    apt install -y --no-install-recommends \
     cron \
     git \
     gnupg \
@@ -28,6 +28,12 @@ RUN apt update && apt install -y --no-install-recommends \
     supervisor \
     unzip \
     libzip-dev \
+    libz-dev \
+    fish \
+    fonts-powerline \
+    powerline \
+    keychain \
+    net-tools \
   && yes '' | pecl install -f memcached redis xdebug-2.6.1 \
   && docker-php-ext-install -j$(nproc) bcmath calendar exif intl mcrypt mysqli opcache pdo_mysql soap xsl zip \
   && docker-php-ext-enable mcrypt memcached redis xdebug \
@@ -56,12 +62,40 @@ RUN curl --silent --show-error https://getcomposer.org/installer | php \
 RUN curl -L -o /usr/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
   && chmod +x /usr/bin/mhsendmail
 
+# Install Yarn
+RUN curl -sS 'https://dl.yarnpkg.com/debian/pubkey.gpg' | apt-key add - \
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+  && apt update \
+  && apt install -y --no-install-recommends yarn \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Node
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - \
+  && apt install -y --no-install-recommends nodejs \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Wordpress CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x wp-cli.phar \
+  && mv wp-cli.phar /usr/local/bin/wp
+
+# Install PHPCS
+RUN composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs \
+  && phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs \
+  && composer clear-cache
+
 # Setup Crons
 RUN touch /root/custom_crontab \
   && /usr/bin/crontab -u www-data /root/custom_crontab
 
 # Update site's directory permissions
 RUN chown -R www-data /var/www/
+
+# Cleanup
+RUN apt clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Custom PHP.ini Config
 COPY ./conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini

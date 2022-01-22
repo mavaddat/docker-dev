@@ -1,11 +1,11 @@
 FROM php:8.0-fpm
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+LABEL maintainer.name="Mavaddat Javid" \
+      maintainer.email="support@mavaddat.ca"
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
-
-RUN apt update && apt install -y --no-install-recommends \
+RUN apt-add-repository ppa:fish-shell/release-3 && apt update && \
+    apt install -y --no-install-recommends \
     cron \
     git \
     gnupg \
@@ -29,9 +29,11 @@ RUN apt update && apt install -y --no-install-recommends \
     unzip \
     libzip-dev \
     libz-dev \
-    zsh \
+    fish \
     fonts-powerline \
     powerline \
+    keychain \
+    net-tools \
   && yes '' | pecl install -f memcached redis xdebug mcrypt \
   && docker-php-ext-install -j$(nproc) bcmath calendar exif intl mysqli opcache pdo_mysql soap xsl zip\
   && docker-php-ext-enable mcrypt memcached redis xdebug\
@@ -42,6 +44,14 @@ RUN apt update && apt install -y --no-install-recommends \
 # Configure GD Library
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
   && docker-php-ext-install -j$(nproc) gd
+
+# Install Ioncube
+RUN cd /tmp \
+  && curl -o ioncube.tar.gz http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+  && tar -xvvzf ioncube.tar.gz \
+  && mv ioncube/ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so /usr/local/lib/php/extensions/* \
+  && rm -Rf ioncube.tar.gz ioncube \
+  && echo "zend_extension=ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so" > /usr/local/etc/php/conf.d/00_docker-php-ext-ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').ini
 
 # Install Composer
 RUN curl --silent --show-error https://getcomposer.org/installer | php \
